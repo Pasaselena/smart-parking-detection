@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Large media files (keep the repo small)
+data/*.mp4
+data/*.avi
+data/*.mov
+!data/.gitkeep
+
+# Generated outputs
+outputs/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.code-workspace
