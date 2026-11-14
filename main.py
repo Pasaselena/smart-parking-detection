@@ -18,6 +18,7 @@ import cv2
 from src import config
 from src.spots import draw_spots, load_spots
 from src.video_source import get_first_frame, get_fps, open_source, read_frames
+from src.preprocess import to_gray
 
 WINDOW = "Smart Parking"
 
@@ -42,7 +43,7 @@ def run(source, spots, loop):
         now = time.time()
         fps = 1.0 / max(now - prev, 1e-6)
         prev = now
-        cv2.putText(output, f"Spots: {len(spots)}  FPS: {fps:.0f}", (10, 30),
+        cv2.putText(output, f"Spots: {len(spots)}  FPS: {fps:.0f}", (20, 70),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.7, config.COLOR_TEXT, 2)
 
         cv2.imshow(WINDOW, output)
@@ -51,7 +52,7 @@ def run(source, spots, loop):
             break
         if key == ord("p"):        # pause until any key
             cv2.waitKey(0)
-
+        cv2.imshow("Gray", to_gray(frame))
     cap.release()
     cv2.destroyAllWindows()
 
