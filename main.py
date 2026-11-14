@@ -18,7 +18,7 @@ import cv2
 from src import config
 from src.spots import draw_spots, load_spots
 from src.video_source import get_first_frame, get_fps, open_source, read_frames
-from src.preprocess import to_gray
+from src.preprocess import to_gray, blur
 
 WINDOW = "Smart Parking"
 
@@ -48,11 +48,11 @@ def run(source, spots, loop):
 
         cv2.imshow(WINDOW, output)
         key = cv2.waitKey(delay_ms) & 0xFF
-        if key in (ord("q"), 27):
+        if key in (ord("q"), 27): 
             break
         if key == ord("p"):        # pause until any key
             cv2.waitKey(0)
-        cv2.imshow("Gray", to_gray(frame))
+        cv2.imshow("Blur", blur(to_gray(frame)))
     cap.release()
     cv2.destroyAllWindows()
 
