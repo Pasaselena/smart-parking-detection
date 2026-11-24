@@ -19,6 +19,7 @@ from src import config
 from src.spots import draw_spots, load_spots
 from src.video_source import get_first_frame, get_fps, open_source, read_frames
 from src.preprocess import process_frame
+from src.occupancy import count_white
 
 WINDOW = "Smart Parking"
 
@@ -38,6 +39,12 @@ def run(source, spots, loop):
 
     for frame in read_frames(cap, loop=loop):
         output = draw_spots(frame, spots)
+        binary = process_frame(frame)
+        for pts in spots:
+            count = count_white(binary, pts)
+            x, y = pts[0]
+            cv2.putText(output, str(count), (x, y - 10),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, config.COLOR_TEXT, 2)
 
         # Measured processing speed (FPS) - becomes important on Raspberry Pi
         now = time.time()
@@ -52,7 +59,7 @@ def run(source, spots, loop):
             break
         if key == ord("p"):        # pause until any key
             cv2.waitKey(0)
-        cv2.imshow("Processed", process_frame(frame))
+            cv2.imshow("Processed", binary)
     cap.release()
     cv2.destroyAllWindows()
 
