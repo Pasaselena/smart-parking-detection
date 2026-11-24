@@ -19,3 +19,7 @@ LINE_THICKNESS = 2
 
 # Each parking spot is defined by exactly 4 corner points
 POINTS_PER_SPOT = 4
+# Week 3: occupancy decision
+FULL_THRESHOLD = 3000          # white pixels; above this = FULL
+COLOR_FULL = (0, 0, 255)       # red   (BGR)
+COLOR_FREE = (0, 255, 0)       # green (BGR)

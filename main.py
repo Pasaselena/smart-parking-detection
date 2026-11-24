@@ -14,12 +14,14 @@ import time
 from pathlib import Path
 
 import cv2
+import numpy as np
 
 from src import config
 from src.spots import draw_spots, load_spots
 from src.video_source import get_first_frame, get_fps, open_source, read_frames
+from src.occupancy import count_white, is_full
 from src.preprocess import process_frame
-from src.occupancy import count_white
+
 
 WINDOW = "Smart Parking"
 
@@ -38,28 +40,39 @@ def run(source, spots, loop):
     prev = time.time()
 
     for frame in read_frames(cap, loop=loop):
+
         output = draw_spots(frame, spots)
         binary = process_frame(frame)
+
+        free = 0
         for pts in spots:
             count = count_white(binary, pts)
+            if is_full(count):
+                color = config.COLOR_FULL
+            else:
+                color = config.COLOR_FREE
+                free = free + 1
+            polygon = np.array(pts, dtype=np.int32)
+            cv2.polylines(output, [polygon], True, color, 3)
             x, y = pts[0]
             cv2.putText(output, str(count), (x, y - 10),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, config.COLOR_TEXT, 2)
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2)
 
         # Measured processing speed (FPS) - becomes important on Raspberry Pi
         now = time.time()
         fps = 1.0 / max(now - prev, 1e-6)
         prev = now
-        cv2.putText(output, f"Spots: {len(spots)}  FPS: {fps:.0f}", (20, 70),
+        cv2.putText(output, f"Free: {free}/{len(spots)}  FPS: {fps:.0f}", (20, 70),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.7, config.COLOR_TEXT, 2)
 
         cv2.imshow(WINDOW, output)
+        cv2.imshow("Processed", binary)
         key = cv2.waitKey(delay_ms) & 0xFF
-        if key in (ord("q"), 27): 
+        if key in (ord("q"), 27):
             break
         if key == ord("p"):        # pause until any key
             cv2.waitKey(0)
-            cv2.imshow("Processed", binary)
+        
     cap.release()
     cv2.destroyAllWindows()
 
