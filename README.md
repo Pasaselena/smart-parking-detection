@@ -17,8 +17,8 @@ A fixed camera watches a car park. Classical image processing (no deep learning,
 | Week | Topic | Status |
 |------|-------|--------|
 | 1 | Project setup, video input, ROI selection & drawing | ✅ Done |
-| 2 | Pre-processing (grayscale, blur, adaptive threshold) | ⏳ |
-| 3 | Occupancy decision + FREE/FULL overlay + counter | ⏳ |
+| 2 | Pre-processing (grayscale, blur, adaptive threshold) | ✅ Done |
+| 3 | Occupancy decision + FREE/FULL overlay + counter | ✅ Done |
 | 4 | Accuracy evaluation, smoothing, FPS measurement | ⏳ |
 | 5 | Dynamic thresholding for changing light | ⏳ |
 | 6 | Live web dashboard (Flask) + final report | ⏳ |
